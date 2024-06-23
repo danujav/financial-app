@@ -11,7 +11,7 @@ public class StockController : ControllerBase
     {
         _context = context;
     }
-  
+
     [HttpGet]
     public IActionResult GetAll()
     {
@@ -27,8 +27,16 @@ public class StockController : ControllerBase
         var stock = _context.Stocks.Find(id);
 
         if (stock == null) return NotFound();
-        
+
         return Ok(stock.ToStockDto());
     }
 
+    [HttpPost]
+    public IActionResult Create([FromBody] CreateStockRequestDto stockDto)
+    {
+        var stockModel = stockDto.ToStockFromCreateDto();
+        _context.Stocks.Add(stockModel);
+        _context.SaveChanges();
+        return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel.ToStockDto());
+    }
 }
