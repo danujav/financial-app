@@ -43,6 +43,15 @@ public class StockRepository : IStockRepository
         {
             stocks = stocks.Where(s => s.CompanyName.Contains(queryObject.CompanyName));
         }
+        if (!string.IsNullOrWhiteSpace(queryObject.SortBy))
+        {
+            if (queryObject.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
+            {
+                stocks = queryObject.IsDescending ? stocks.OrderByDescending(s => s.Symbol)
+                : stocks.OrderBy(s => s.Symbol);
+            }
+        }
+
         return await stocks.ToListAsync();
     }
 
