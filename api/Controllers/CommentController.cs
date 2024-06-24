@@ -35,7 +35,7 @@ public class CommentController : ControllerBase
     }
 
     [HttpPost("{stockId}")]
-    public async Task<IActionResult> Create([FromRoute] int stockId, CreateCommentDto commentDto)
+    public async Task<IActionResult> Create([FromRoute] int stockId, [FromBody] CreateCommentDto commentDto)
     {
         if (!await _stockRepository.StockExists(stockId)) return BadRequest("Stock does not exists!");
 
