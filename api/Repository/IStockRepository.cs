@@ -2,7 +2,7 @@
 
 public interface IStockRepository
 {
-    Task<List<Stock>> GetAllAsync();
+    Task<List<Stock>> GetAllAsync(QueryObject queryObject);
 
     Task<Stock?> GetByIdAsync(int id);
 

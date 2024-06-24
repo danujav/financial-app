@@ -32,9 +32,18 @@ public class StockRepository : IStockRepository
         return stockModel;
     }
 
-    public async Task<List<Stock>> GetAllAsync()
+    public async Task<List<Stock>> GetAllAsync(QueryObject queryObject)
     {
-        return await _context.Stocks.Include(c => c.Comments).ToListAsync();
+        var stocks = _context.Stocks.Include(s => s.Comments).AsQueryable();
+        if (!string.IsNullOrWhiteSpace(queryObject.Symbol))
+        {
+            stocks = stocks.Where(s => s.Symbol.Contains(queryObject.Symbol));
+        }
+        if (!string.IsNullOrWhiteSpace(queryObject.CompanyName))
+        {
+            stocks = stocks.Where(s => s.CompanyName.Contains(queryObject.CompanyName));
+        }
+        return await stocks.ToListAsync();
     }
 
     public async Task<Stock?> GetByIdAsync(int id)
