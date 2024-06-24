@@ -43,7 +43,7 @@ public class StockController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel.ToStockDto());
     }
 
-    [HttpPost]
+    [HttpPut]
     [Route("{id}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
     {
