@@ -18,6 +18,8 @@ public class CommentController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var comments = await _commentRepository.GetAllAsync();
 
         var commentDto = comments.Select(c => c.ToCommentDto());
@@ -25,18 +27,22 @@ public class CommentController : ControllerBase
         return Ok(commentDto);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var commentModel = await _commentRepository.GetByIdAsync(id);
         if (commentModel == null) return NotFound();
 
         return Ok(commentModel.ToCommentDto());
     }
 
-    [HttpPost("{stockId}")]
+    [HttpPost("{stockId:int}")]
     public async Task<IActionResult> Create([FromRoute] int stockId, [FromBody] CreateCommentDto commentDto)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         if (!await _stockRepository.StockExists(stockId)) return BadRequest("Stock does not exists!");
 
         var commentModel = commentDto.ToCommentFromCreate(stockId);
@@ -46,9 +52,11 @@ public class CommentController : ControllerBase
     }
 
     [HttpPut]
-    [Route("{id}")]
+    [Route("{id:int}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRequestCommentDto updateDto)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var comment = await _commentRepository.UpdateAsync(id, updateDto.ToCommentFromUpdate());
         if (comment == null) return NotFound("Comment no found!");
 
@@ -56,9 +64,11 @@ public class CommentController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("{id}")]
+    [Route("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var commentModel = await _commentRepository.DeleteAsync(id);
         if (commentModel == null) return NotFound("Comment not found!");
 
