@@ -12,7 +12,8 @@ public static class StockMapper
             Purchase = stockModel.Purchase,
             Lastdiv = stockModel.Lastdiv,
             Industry = stockModel.Industry,
-            MarketCap = stockModel.MarketCap
+            MarketCap = stockModel.MarketCap,
+            Comments = stockModel.Comments.Select(c => c.ToCommentDto()).ToList()
         };
     }
     public static Stock ToStockFromCreateDto(this CreateStockRequestDto stockDto)
